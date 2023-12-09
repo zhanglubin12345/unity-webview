@@ -550,8 +550,15 @@ public class CWebViewPlugin extends Fragment {
                 public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
                     // cf. https://github.com/googlearchive/chromium-webview-samples/blob/master/input-file-example/app/src/main/java/inputfilesample/android/chrome/google/com/inputfilesample/MainFragment.java
 
+                    if (mFilePathCallback != null) {
+                        mFilePathCallback.onReceiveValue(null);
+                    }
                     mFilePathCallback = filePathCallback;
-                    MyUnitySendMessage(gameObject, "RequestFileChooserPermissions", "");
+
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, INPUT_FILE_REQUEST_CODE);
                     return true;
                 }
 
